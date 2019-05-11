@@ -12,6 +12,9 @@ var Songs = Backbone.Collection.extend({
 
 // View
 var SongView = Backbone.View.extend({
+  initialize: function() {
+    this.model.on('change', this.render, this);
+  },
   events: {
     click: 'onClick',
     'click .bookmark': 'onClickBookmark'
@@ -25,10 +28,7 @@ var SongView = Backbone.View.extend({
   },
   tagName: 'li',
   render: function() {
-    this.$el.html(
-      this.model.get('title') +
-        '<button>Listen</button> <button class="bookmark">Bookmar</button>'
-    );
+    this.$el.html(this.model.get('title'));
     return this;
   }
 });
@@ -38,6 +38,14 @@ var song = new Song({ title: 'Daisy Mae', year: 'Now' });
 
 // View
 var SongsView = Backbone.View.extend({
+  tagName: 'ul',
+  initialize: function() {
+    this.model.on('add', this.onSongAdded, this);
+  },
+  onSongAdded: function(song) {
+    var songView = new SongView({ model: song });
+    this.$el.append(songView.render().$el);
+  },
   render: function() {
     var self = this;
     this.model.each(function(song) {
@@ -59,4 +67,4 @@ songView.render();
 
 // instantiate view of a collection
 var songsView = new SongsView({ el: '#songs', model: songs });
-// songsView.render();
+songsView.render();
