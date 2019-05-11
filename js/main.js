@@ -28,14 +28,16 @@ var SongView = Backbone.View.extend({
   },
   tagName: 'li',
   render: function() {
-    this.$el.html(this.model.get('title'));
+    var template = _.template($('#songTemplate').html());
+    var html = template(this.model.toJSON());
+    this.$el.html(html);
     this.$el.attr('id', this.model.id);
     return this;
   }
 });
 
 // instantiate a model
-var song = new Song({ title: 'Daisy Mae', year: 'Now' });
+var song = new Song({ title: 'Daisy Mae', year: 'Now', plays: 224242 });
 
 // View for a collection with events
 var SongsView = Backbone.View.extend({
@@ -63,9 +65,9 @@ var SongsView = Backbone.View.extend({
 
 // instantiate a collection
 var songs = new Songs([
-  new Song({ id: 1, title: 'Julie Mae' }),
-  new Song({ id: 2, title: 'Mother Mae' }),
-  new Song({ id: 3, title: 'Foobar' })
+  new Song({ id: 1, title: 'Julie Mae', plays: 1 }),
+  new Song({ id: 2, title: 'Mother Mae', plays: 2 }),
+  new Song({ id: 3, title: 'Foobar', plays: 3 })
 ]);
 
 // instantiate view of a model
