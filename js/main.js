@@ -77,3 +77,68 @@ songView.render();
 // instantiate view of a collection
 var songsView = new SongsView({ el: '#songs', model: songs });
 songsView.render();
+
+//ROUTER TUTORIAL:
+var ArtistsView = Backbone.View.extend({
+  render: function() {
+    this.$el.html('ARTISTS VIEW');
+    return this;
+  }
+});
+
+var AlbumsView = Backbone.View.extend({
+  render: function() {
+    this.$el.html('ALBUMS VIEW');
+    return this;
+  }
+});
+
+var GenresView = Backbone.View.extend({
+  render: function() {
+    this.$el.html('GENRES VIEW');
+    return this;
+  }
+});
+
+// Create router
+var AppRouter = Backbone.Router.extend({
+  routes: {
+    albums: 'viewAlbums',
+    'albums/:albumId': 'viewAlbumById',
+    artists: 'viewArtists',
+    genres: 'viewGenres',
+    '*other': 'defaultRoute'
+  },
+  viewAlbums: function() {
+    var view = new AlbumsView({ el: '#container' });
+    view.render();
+  },
+  viewAlbumById: function(albumId) {},
+  viewArtists: function() {
+    var view = new ArtistsView({ el: '#container' });
+    view.render();
+  },
+  viewGenres: function() {
+    var view = new GenresView({ el: '#container' });
+    view.render();
+  },
+  defaultRoute: function() {}
+});
+
+// instantiate router & tell Backbone to listen to it
+var router = new AppRouter();
+Backbone.history.start();
+
+// view for nav bar
+var NavView = Backbone.View.extend({
+  events: {
+    click: 'onClick'
+  },
+  onClick: function(e) {
+    var $li = $(e.target);
+    router.navigate($li.attr('data-url'), { trigger: true });
+  }
+});
+
+// instantiate nav view
+var navView = new NavView({ el: '#nav' });
