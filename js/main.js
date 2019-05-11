@@ -10,7 +10,7 @@ var Songs = Backbone.Collection.extend({
   model: Song
 });
 
-// View
+// View for a model with events
 var SongView = Backbone.View.extend({
   initialize: function() {
     this.model.on('change', this.render, this);
@@ -29,6 +29,7 @@ var SongView = Backbone.View.extend({
   tagName: 'li',
   render: function() {
     this.$el.html(this.model.get('title'));
+    this.$el.attr('id', this.model.id);
     return this;
   }
 });
@@ -36,15 +37,20 @@ var SongView = Backbone.View.extend({
 // instantiate a model
 var song = new Song({ title: 'Daisy Mae', year: 'Now' });
 
-// View
+// View for a collection with events
 var SongsView = Backbone.View.extend({
   tagName: 'ul',
   initialize: function() {
     this.model.on('add', this.onSongAdded, this);
+    this.model.on('remove', this.onSongRemoved, this);
   },
   onSongAdded: function(song) {
     var songView = new SongView({ model: song });
     this.$el.append(songView.render().$el);
+  },
+  onSongRemoved: function(song) {
+    // this.$el.find('li#' + song.id).remove();
+    this.$('li#' + song.id).remove();
   },
   render: function() {
     var self = this;
@@ -57,8 +63,9 @@ var SongsView = Backbone.View.extend({
 
 // instantiate a collection
 var songs = new Songs([
-  new Song({ title: 'Julie Mae' }),
-  new Song({ title: 'Mother Mae' })
+  new Song({ id: 1, title: 'Julie Mae' }),
+  new Song({ id: 2, title: 'Mother Mae' }),
+  new Song({ id: 3, title: 'Foobar' })
 ]);
 
 // instantiate view of a model
